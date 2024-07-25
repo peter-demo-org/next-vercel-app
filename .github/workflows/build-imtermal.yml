@@ -1,0 +1,35 @@
+name: Dry Build
+run-name: Dry Build
+
+on: 
+  push:
+    branches:
+      - "main"
+
+jobs:
+    setup:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out repository code
+              uses: actions/checkout@v4
+            - run: echo "The ${{github.repository}} repository has been cloned to runner"
+            - uses: actions/setup-node@v4
+              with:
+                node-version: 18
+                cache: 'npm'
+                registry-url: 'https://npm.pkg.github.com'
+            - name: install packages
+              run: npm ci
+              env:
+               NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Cache nextjs build
+              uses: actions/cache@v3
+              with:
+                path: .next/cache
+                key: ${{ runner.os }}-nextjs-${{ hashFiles('package*.json') }}
+            - name: build project
+              run: npm run build
+            - name: List files in the repository
+              run: |
+                ls ${{github.workspace}}
+            - run: echo "job staus => ${{job.status}}"
