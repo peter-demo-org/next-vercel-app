@@ -2,7 +2,9 @@ name: Dry Build
 run-name: Dry Build
 
 on: 
-    push:
+  push:
+    branches:
+      - "main"
 
 jobs:
     setup:
