@@ -17,6 +17,9 @@ jobs:
               with:
                 node-version: 18
                 cache: 'npm'
+                registry-url: 'https://npm.pkg.github.com'
+            - name: Authnticate to Github Package
+              run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
             - name: install packages
               run: npm ci
             - name: Cache nextjs build
